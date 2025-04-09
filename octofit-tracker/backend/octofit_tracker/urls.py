@@ -15,19 +15,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import views
-
-router = DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'teams', views.TeamViewSet)
-router.register(r'activity', views.ActivityViewSet)
-router.register(r'leaderboard', views.LeaderboardViewSet)
-router.register(r'workouts', views.WorkoutViewSet)
+from django.urls import path
+from .views import UserListView, TeamListView, ActivityListView, LeaderboardListView, WorkoutListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api-root/', include(router.urls)),
+    path('users/', UserListView.as_view(), name='user-list'),
+    path('teams/', TeamListView.as_view(), name='team-list'),
+    path('activities/', ActivityListView.as_view(), name='activity-list'),
+    path('leaderboard/', LeaderboardListView.as_view(), name='leaderboard-list'),
+    path('workouts/', WorkoutListView.as_view(), name='workout-list'),
 ]

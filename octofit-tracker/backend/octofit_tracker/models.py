@@ -1,41 +1,24 @@
-from djongo import models
+from mongoengine import Document, StringField, EmailField, ListField, ReferenceField, IntField, DurationField
 
-class User(models.Model):
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255)
-    age = models.IntegerField()
-    team = models.CharField(max_length=255, null=True, blank=True)
+class User(Document):
+    username = StringField(max_length=100, required=True)
+    email = EmailField(unique=True, required=True)
+    password = StringField(max_length=100, required=True)
 
-    def __str__(self):
-        return self.name
+class Team(Document):
+    name = StringField(max_length=100, unique=True, required=True)
+    members = ListField(ReferenceField(User))
 
-class Team(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    members = models.JSONField()
+class Activity(Document):
+    user = ReferenceField(User, required=True)
+    activity_type = StringField(max_length=100, required=True)
+    duration = IntField(required=True)  # Duration in seconds
+    duration = DurationField()  # New field to track user activity duration
 
-    def __str__(self):
-        return self.name
+class Leaderboard(Document):
+    user = ReferenceField(User, required=True)
+    score = IntField(required=True)
 
-class Activity(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    activity_type = models.CharField(max_length=255)
-    duration = models.IntegerField()  # in minutes
-    date = models.DateField()
-
-    def __str__(self):
-        return f"{self.activity_type} by {self.user.name}"
-
-class Leaderboard(models.Model):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    points = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.team.name}: {self.points} points"
-
-class Workout(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    duration = models.IntegerField()  # in minutes
-
-    def __str__(self):
-        return self.name
+class Workout(Document):
+    name = StringField(max_length=100, required=True)
+    description = StringField()

@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, EmailField, ListField, ReferenceField, IntField, DurationField
+from mongoengine import Document, StringField, EmailField, ListField, ReferenceField, IntField
 
 class User(Document):
     username = StringField(max_length=100, required=True)
@@ -13,7 +13,6 @@ class Activity(Document):
     user = ReferenceField(User, required=True)
     activity_type = StringField(max_length=100, required=True)
     duration = IntField(required=True)  # Duration in seconds
-    duration = DurationField()  # New field to track user activity duration
 
 class Leaderboard(Document):
     user = ReferenceField(User, required=True)
